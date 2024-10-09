@@ -11,10 +11,12 @@ const App = () => {
 
   const [notes, noteService] = useResource(
     "http://localhost:3005/api/notes",
+    "notes",
     user ? user.token : null
   );
   const [phonebook, phonebookService] = useResource(
-    "http://localhost:3001/api/persons"
+    "http://localhost:3001/api/persons",
+    "persons"
   );
 
   const handleLogout = () => {
@@ -24,26 +26,30 @@ const App = () => {
 
   const newNote = (e) => {
     e.preventDefault();
-
-    noteService.create({
+    noteService.createResourceMutation.mutate({
       content: contentInput.value,
       important: false,
     });
-
     resetContent();
   };
 
   const newPhonebookEntry = (e) => {
     e.preventDefault();
-
-    phonebookService.create({
+    phonebookService.createResourceMutation.mutate({
       name: nameInput.value,
       number: numberInput.value,
     });
-
     resetName();
     resetNumber();
   };
+
+  if (notes.isPending || phonebook.isPending) {
+    return <p>loading...</p>;
+  }
+
+  if (notes.isError || phonebook.isError) {
+    return <p>oops, an error ocurred...{notes.error}</p>;
+  }
 
   return (
     <>
@@ -63,8 +69,8 @@ const App = () => {
             <button>create note</button>
           </form>
           <ul>
-            {notes &&
-              notes.map((note) => <li key={note.id}>{note.content}</li>)}
+            {notes.data &&
+              notes.data.map((note) => <li key={note.id}>{note.content}</li>)}
           </ul>
         </div>
       )}
@@ -82,8 +88,8 @@ const App = () => {
         <ul>
           {" "}
           <ul>
-            {phonebook &&
-              phonebook.map((person) => (
+            {phonebook.data &&
+              phonebook.data.map((person) => (
                 <li key={person.id}>
                   {person.name} {person.number}
                 </li>
