@@ -5,7 +5,6 @@ export const notificationSlice = createSlice({
   initialState: { message: null },
   reducers: {
     setNotification(_, action) {
-      console.log(action);
       return action.payload;
     },
     clearNotification() {
@@ -15,7 +14,7 @@ export const notificationSlice = createSlice({
 });
 
 const { setNotification, clearNotification } = notificationSlice.actions;
-export const notificationReducer = notificationSlice.reducer;
+export default notificationSlice.reducer;
 
 export const notifyWith =
   (message, type = "info", seconds = 5) =>

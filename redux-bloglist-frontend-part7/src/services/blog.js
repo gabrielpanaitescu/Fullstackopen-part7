@@ -19,7 +19,6 @@ const getAll = async () => {
 };
 
 const create = async (newObject) => {
-
   const response = await axios.post(baseUrl, newObject, getConfig());
   return response.data;
 };
@@ -27,7 +26,7 @@ const create = async (newObject) => {
 const update = async (id, updatedObject) => {
   const url = `${baseUrl}/${id}`;
 
-
+  console.log(id, updatedObject);
   const response = await axios.put(url, updatedObject, getConfig());
   return response.data;
 };
@@ -38,7 +37,7 @@ const deleteItem = async (id) => {
   const response = await axios.delete(url, getConfig());
 
   return response.data;
-}
+};
 
 export default {
   getAll,
