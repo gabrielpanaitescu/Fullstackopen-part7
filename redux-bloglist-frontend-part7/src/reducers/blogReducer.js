@@ -29,9 +29,14 @@ export default blogSlice.reducer;
 const { setBlogs, addBlog, updateBlog, removeBlog } = blogSlice.actions;
 
 export const initializeBlogs = () => async (dispatch) => {
-  const blogs = await blogService.getAll();
+  try {
+    const blogs = await blogService.getAll();
 
-  dispatch(setBlogs(blogs));
+    dispatch(setBlogs(blogs));
+  } catch (exception) {
+    console.log(exception);
+    dispatch(notifyWith(exception.message, "error"));
+  }
 };
 
 export const createBlog = (blogObject) => async (dispatch) => {
@@ -44,7 +49,7 @@ export const createBlog = (blogObject) => async (dispatch) => {
     );
     dispatch(addBlog(newBlog));
   } catch (exception) {
-    dispatch(notifyWith(exception.response.data.error, "error"));
+    dispatch(notifyWith(exception.message, "error"));
   }
 };
 
@@ -61,7 +66,7 @@ export const likeBlog = (id) => async (dispatch, getState) => {
     const returnedBlog = await blogService.update(id, updatedBlog);
     dispatch(updateBlog(returnedBlog));
   } catch (exception) {
-    dispatch(notifyWith(exception.response.data.error, "error"));
+    dispatch(notifyWith(exception.message, "error"));
   }
 };
 
@@ -70,6 +75,6 @@ export const deleteBlog = (id) => async (dispatch) => {
     await blogService.deleteItem(id);
     dispatch(removeBlog(id));
   } catch (exception) {
-    dispatch(notifyWith(exception.response.data.error, "error"));
+    dispatch(notifyWith(exception.message, "error"));
   }
 };
