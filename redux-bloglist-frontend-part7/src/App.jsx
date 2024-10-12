@@ -6,15 +6,18 @@ import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import { useDispatch } from "react-redux";
+import { notifyWith } from "./reducers/notificationReducer";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [info, setInfo] = useState({ message: null });
   const [loginVisible, setLoginVisible] = useState(true);
   const blogFormRef = useRef();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -30,14 +33,6 @@ const App = () => {
     }
   }, []);
 
-  const notifyWith = (message, type = "info") => {
-    setInfo({ message, type });
-
-    setTimeout(() => {
-      setInfo({ message: null });
-    }, 3000);
-  };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -50,9 +45,9 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
-      notifyWith(`logged in as '${user.username}'`);
+      dispatch(notifyWith(`logged in as '${user.username}'`));
     } catch (exception) {
-      notifyWith(exception.response.data.error, "error");
+      dispatch(notifyWith(exception.response.data.error, "error"));
     }
   };
 
@@ -68,8 +63,10 @@ const App = () => {
 
     setBlogs(blogs.concat(newBlog));
 
-    notifyWith(
-      `a new blog '${newBlog.title}' by '${newBlog.author}' has been added`
+    dispatch(
+      notifyWith(
+        `a new blog '${newBlog.title}' by '${newBlog.author}' has been added`
+      )
     );
   };
 
@@ -86,7 +83,7 @@ const App = () => {
       const returnedBlog = await blogService.update(blogId, updatedBlog);
       setBlogs(blogs.map((blog) => (blog.id === blogId ? returnedBlog : blog)));
     } catch (exception) {
-      notifyWith(exception.response.data.error, "error");
+      dispatch(notifyWith(exception.response.data.error, "error"));
     }
   };
 
@@ -99,7 +96,7 @@ const App = () => {
       await blogService.deleteItem(id);
       setBlogs(blogs.filter((blog) => blog.id !== id));
     } catch (exception) {
-      notifyWith(exception.response.data.error, "error");
+      dispatch(notifyWith(exception.response.data.error, "error"));
     }
   };
 
@@ -132,7 +129,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification info={info} />
+      <Notification />
       {user === null ? (
         loginForm()
       ) : (
