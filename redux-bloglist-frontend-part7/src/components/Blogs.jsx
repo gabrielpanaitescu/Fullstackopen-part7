@@ -3,12 +3,8 @@ import BlogForm from "./BlogForm";
 import Togglable from "./Togglable";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
-import {
-  initializeBlogs,
-  createBlog,
-  likeBlog,
-  deleteBlog,
-} from "../reducers/blogReducer";
+import { fetchBlogs, createBlog } from "../reducers/blogReducer";
+import { likeBlog, deleteBlog } from "../reducers/blogReducer";
 import { logout } from "../reducers/userReducer";
 
 const Blogs = () => {
@@ -17,14 +13,23 @@ const Blogs = () => {
   const blogFormRef = useRef();
 
   useEffect(() => {
-    dispatch(initializeBlogs());
+    dispatch(fetchBlogs());
   }, []);
 
-  const blogs = useSelector((state) => state.blogs);
+  const {
+    data: blogs,
+    error,
+    loading,
+  } = useSelector((state) => {
+    return state.blogs;
+  });
+
+  console.log(blogs, error, loading);
 
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
-    dispatch(createBlog(blogObject));
+    const result = await dispatch(createBlog(blogObject));
+    console.log(result);
   };
 
   const updateLikesOf = async (blogId) => {
@@ -43,6 +48,8 @@ const Blogs = () => {
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  // if (loading === "pending") return <div>loading...</div>;
 
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
 
