@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { initializeUserIfStored } from "../reducers/userReducer";
+import { useState } from "react";
+
 import { useDispatch } from "react-redux";
 import { loginWith } from "../reducers/userReducer";
 
@@ -10,10 +10,6 @@ const LoginForm = () => {
   const showWhenVisible = { display: loginVisible ? "" : "none" };
   const hideWhenVisible = { display: loginVisible ? "none" : "" };
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(initializeUserIfStored());
-  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
