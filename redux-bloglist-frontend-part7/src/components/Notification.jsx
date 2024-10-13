@@ -1,8 +1,4 @@
-import { useSelector } from "react-redux";
-
-const Notification = () => {
-  const info = useSelector((state) => state.notification);
-
+const Notification = ({ info }) => {
   if (info.message === null) return;
 
   const style = {
