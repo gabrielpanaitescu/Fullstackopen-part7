@@ -1,14 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import notificationReducer from "../reducers/notificationReducer";
-import blogReducer from "../reducers/blogReducer";
 import userReducer from "../reducers/userReducer";
+import { apiSlice } from "../services/apiSlice";
 
 const store = configureStore({
   reducer: {
     notification: notificationReducer,
-    blogs: blogReducer,
     user: userReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
 export default store;

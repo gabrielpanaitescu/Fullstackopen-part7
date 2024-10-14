@@ -1,54 +1,37 @@
-import { useState } from "react";
-
-import { useDispatch } from "react-redux";
-import { loginWith } from "../reducers/userReducer";
+import { useLogin } from "../hooks/useLogin";
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginVisible, setLoginVisible] = useState(false);
-  const showWhenVisible = { display: loginVisible ? "" : "none" };
-  const hideWhenVisible = { display: loginVisible ? "none" : "" };
-  const dispatch = useDispatch();
+  const {
+    username,
+    password,
+    setUsername,
+    setPassword,
+    handleLogin,
+    mutationStatus,
+  } = useLogin();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    dispatch(loginWith(username, password));
-    setUsername("");
-    setPassword("");
-  };
+  if (mutationStatus.isLoading) return <div>logging in...</div>;
 
   return (
-    <>
-      <div style={showWhenVisible}>
-        <h2>login in to application</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label htmlFor="username">username </label>
-            <input
-              id="username"
-              name="Username"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">password </label>
-            <input
-              id="password"
-              name="Password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
+    <form onSubmit={handleLogin}>
+      <div>
+        username
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
       </div>
-      <div style={hideWhenVisible}>
-        <h2></h2>
-        <button onClick={() => setLoginVisible(true)}>login</button>
+      <div>
+        password
+        <input
+          type="text"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
-    </>
+      <button>login</button>
+    </form>
   );
 };
 

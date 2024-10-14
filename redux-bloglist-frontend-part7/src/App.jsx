@@ -4,6 +4,7 @@ import Blogs from "./components/Blogs";
 import { useSelector, useDispatch } from "react-redux";
 import { initializeUserIfStored } from "./reducers/userReducer";
 import { useEffect } from "react";
+
 const App = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();

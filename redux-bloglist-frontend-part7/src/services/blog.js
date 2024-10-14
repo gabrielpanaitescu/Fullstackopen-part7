@@ -7,11 +7,15 @@ const setToken = (storedToken) => {
   token = `Bearer ${storedToken}`;
 };
 
-const getConfig = () => ({
-  headers: {
-    Authorization: token,
-  },
-});
+const getConfig = () => {
+  if (!token) return {};
+
+  return {
+    headers: {
+      Authorization: token,
+    },
+  };
+};
 
 const getAll = async () => {
   const response = await axios.get(baseUrl);
