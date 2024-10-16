@@ -19,16 +19,16 @@ const getAll = async () => {
 };
 
 const create = async (newObject) => {
-
   const response = await axios.post(baseUrl, newObject, getConfig());
   return response.data;
 };
 
-const update = async (id, updatedObject) => {
+const update = async (updatedObject) => {
+  const id = updatedObject.id;
   const url = `${baseUrl}/${id}`;
 
-
   const response = await axios.put(url, updatedObject, getConfig());
+  console.log(response);
   return response.data;
 };
 
@@ -38,7 +38,7 @@ const deleteItem = async (id) => {
   const response = await axios.delete(url, getConfig());
 
   return response.data;
-}
+};
 
 export default {
   getAll,

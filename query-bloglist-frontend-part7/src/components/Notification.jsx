@@ -1,4 +1,8 @@
-const Notification = ({ info }) => {
+import { useNotificationState } from "../contexts/NotificationContext";
+
+const Notification = () => {
+  const info = useNotificationState();
+
   if (info.message === null) return;
 
   const style = {
