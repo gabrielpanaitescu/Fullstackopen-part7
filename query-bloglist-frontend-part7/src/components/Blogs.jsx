@@ -60,11 +60,6 @@ const Blogs = () => {
     deleteBlogMutation.mutate(id);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("loggedUser");
-    clearUser();
-  };
-
   const blurredStyles = isBlurred
     ? {
         filter: "blur(3px)",
@@ -77,11 +72,8 @@ const Blogs = () => {
 
   return (
     <>
-      <h2>Blogs</h2>
-      <p>{user.name} logged in</p>
-      <button onClick={handleLogout}>logout</button>
+      <h3>Blogs</h3>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <h2>Create new blog</h2>
         <BlogForm createBlog={addBlog} />
       </Togglable>
       <ul style={blurredStyles}>

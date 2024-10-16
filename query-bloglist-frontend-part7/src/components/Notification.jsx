@@ -6,7 +6,7 @@ const Notification = () => {
   if (info.message === null) return;
 
   const style = {
-    color: info.type === "info" ? "green" : "red",
+    color: info.type === "info" ? "green" : info.type === "error" ? "red" : "",
     borderStyle: "solid",
     backgroundColor: "lightgrey",
     fontSize: "1.15rem",

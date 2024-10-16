@@ -1,11 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import { useLogin } from "../hooks/loginApiHooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthState } from "../contexts/AuthContext";
 
 const LoginForm = () => {
+  const user = useAuthState();
   const [loginVisible, setLoginVisible] = useState(true);
-
+  const navigate = useNavigate();
   const { username, password, setUsername, setPassword, handleLogin } =
     useLogin();
+
+  useEffect(() => {
+    if (user) navigate("/blogs");
+  }, [user, navigate]);
+
+  const handleSubmit = (e) => {
+    handleLogin(e);
+  };
 
   const showWhenVisible = { display: loginVisible ? "" : "none" };
   const hideWhenVisible = { display: loginVisible ? "none" : "" };
@@ -14,8 +25,8 @@ const LoginForm = () => {
     <>
       <div style={showWhenVisible}>
         <div>
-          <h2>login in to application</h2>
-          <form onSubmit={handleLogin}>
+          <h2>log in to application</h2>
+          <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="username">username </label>
               <input

@@ -7,6 +7,19 @@ import { useAuthDispatch, useAuthState } from "../contexts/AuthContext";
 import { useState } from "react";
 import { useNotify } from "../contexts/NotificationContext";
 
+export const useLogout = () => {
+  const { clearUser } = useAuthDispatch();
+
+  const logout = () => {
+    clearUser();
+    localStorage.removeItem("loggedUser");
+  };
+
+  return {
+    logout,
+  };
+};
+
 export const useLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +37,6 @@ export const useLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       const user = await loginMutation.mutateAsync({ username, password });
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
@@ -39,7 +51,6 @@ export const useLogin = () => {
   };
 
   return {
-    user,
     username,
     password,
     setUsername,
