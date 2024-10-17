@@ -11,18 +11,12 @@ import { useInitializeAuth, useLogout } from "./hooks/loginApiHooks";
 import { Routes, Route, Link, Navigate, useMatch } from "react-router-dom";
 import { useUsers } from "./hooks/userApiHooks";
 import { useBlogApi } from "./hooks/blogApiHooks";
-import { useState, useEffect } from "react";
 
 const App = () => {
-  const [loading, setLoading] = useState(true); // Track if auth initialization is complete
-  const loggedUser = useInitializeAuth();
+  const { user: loggedUser, authInitializing } = useInitializeAuth();
   const { logout: handleLogout } = useLogout();
   const { users, isPending, isError, error } = useUsers();
   const { blogs } = useBlogApi();
-
-  useEffect(() => {
-    setLoading(false);
-  }, []);
 
   const userPathMatch = useMatch("/users/:id");
   const matchedUser = userPathMatch
@@ -38,7 +32,7 @@ const App = () => {
     marginRight: 10,
   };
 
-  if (loading) {
+  if (authInitializing) {
     return null;
   }
 

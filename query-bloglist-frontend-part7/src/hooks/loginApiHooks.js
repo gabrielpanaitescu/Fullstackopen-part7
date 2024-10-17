@@ -60,6 +60,8 @@ export const useLogin = () => {
 
 export const useInitializeAuth = () => {
   const user = useAuthState();
+  const [authInitializing, setAuthInitializing] = useState(true);
+
   const { setUser } = useAuthDispatch();
 
   useEffect(() => {
@@ -68,9 +70,12 @@ export const useInitializeAuth = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
+      setAuthInitializing(false);
       blogService.setToken(user.token);
+    } else if (!loggedUserJSON) {
+      setAuthInitializing(false);
     }
   }, []);
 
-  return user;
+  return { user, authInitializing };
 };
