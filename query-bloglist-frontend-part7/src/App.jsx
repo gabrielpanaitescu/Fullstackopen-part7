@@ -5,12 +5,21 @@ import About from "./components/About";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
 import Users from "./components/Users";
+import User from "./components/User";
 import { useInitializeAuth, useLogout } from "./hooks/loginApiHooks";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Link, Navigate, useMatch } from "react-router-dom";
+import { useUsers } from "./hooks/userApiHooks";
 
 const App = () => {
-  const user = useInitializeAuth();
+  const loggedUser = useInitializeAuth();
   const { logout: handleLogout } = useLogout();
+
+  const { users, isPending, isError, error } = useUsers();
+
+  const match = useMatch("/users/:id");
+  const matchedUser = match
+    ? users.find((user) => user.id === match.params.id)
+    : null;
 
   const marginRight = {
     marginRight: 10,
@@ -31,9 +40,9 @@ const App = () => {
         <Link style={marginRight} to={"/about"}>
           about
         </Link>
-        {user ? (
+        {loggedUser ? (
           <em style={marginRight}>
-            logged in as {user.username}{" "}
+            logged in as {loggedUser.username}{" "}
             <button onClick={handleLogout}>logout</button>
           </em>
         ) : (
@@ -49,11 +58,23 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route
           path="/users"
-          element={user ? <Users /> : <Navigate to={"/login"} />}
+          element={loggedUser ? <Users /> : <Navigate to={"/login"} />}
+        />
+
+        <Route
+          path="/users/:id"
+          element={
+            <User
+              user={matchedUser}
+              isPending={isPending}
+              isError={isError}
+              error={error}
+            />
+          }
         />
         <Route
           path="/blogs"
-          element={user ? <Blogs /> : <Navigate to={"/login"} />}
+          element={loggedUser ? <Blogs /> : <Navigate to={"/login"} />}
         />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<LoginForm />} />

@@ -23,7 +23,6 @@ export const useLogout = () => {
 export const useLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const user = useAuthState();
   const { setUser } = useAuthDispatch();
   const queryClient = useQueryClient();
   const notifyWith = useNotify();
