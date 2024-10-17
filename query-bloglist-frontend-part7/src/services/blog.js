@@ -34,8 +34,14 @@ const update = async (updatedObject) => {
 
 const deleteItem = async (id) => {
   const url = `${baseUrl}/${id}`;
-
   const response = await axios.delete(url, getConfig());
+  return response.data;
+};
+
+const addComment = async ({ id, text }) => {
+  console.log(id, text);
+  const url = `${baseUrl}/${id}/comments`;
+  const response = await axios.post(url, { text }, getConfig());
 
   return response.data;
 };
@@ -45,5 +51,6 @@ export default {
   create,
   update,
   deleteItem,
+  addComment,
   setToken,
 };

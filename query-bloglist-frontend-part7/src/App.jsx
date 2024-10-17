@@ -107,7 +107,7 @@ const App = () => {
       </Routes>
       <Footer>
         <br />
-        <em>Note app, Department of Computer Science 2024</em>
+        <em>Blog app, Department of Computer Science 2024</em>
       </Footer>
     </div>
   );

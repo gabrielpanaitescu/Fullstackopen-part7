@@ -58,6 +58,17 @@ export const useBlogApi = () => {
     },
   });
 
+  const blogCommentMutation = useMutation({
+    mutationFn: blogService.addComment,
+    onSuccess: () => {
+      invalidateBlogs();
+    },
+    onError: (error) => {
+      console.log(error);
+      notifyWith(`Failed to add comment. ${error.message}`, "error");
+    },
+  });
+
   return {
     blogs: getBlogs.data || [],
     isGetBlogsPending: getBlogs.isPending,
@@ -66,5 +77,6 @@ export const useBlogApi = () => {
     createBlogMutation,
     updateBlogMutation,
     deleteBlogMutation,
+    blogCommentMutation,
   };
 };
