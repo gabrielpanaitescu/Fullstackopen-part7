@@ -11,13 +11,18 @@ import { useInitializeAuth, useLogout } from "./hooks/loginApiHooks";
 import { Routes, Route, Link, Navigate, useMatch } from "react-router-dom";
 import { useUsers } from "./hooks/userApiHooks";
 import { useBlogApi } from "./hooks/blogApiHooks";
+import { useState, useEffect } from "react";
 
 const App = () => {
+  const [loading, setLoading] = useState(true); // Track if auth initialization is complete
   const loggedUser = useInitializeAuth();
   const { logout: handleLogout } = useLogout();
-
   const { users, isPending, isError, error } = useUsers();
   const { blogs } = useBlogApi();
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const userPathMatch = useMatch("/users/:id");
   const matchedUser = userPathMatch
@@ -32,6 +37,10 @@ const App = () => {
   const marginRight = {
     marginRight: 10,
   };
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <div>
@@ -72,12 +81,16 @@ const App = () => {
         <Route
           path="/users/:id"
           element={
-            <User
-              user={matchedUser}
-              isPending={isPending}
-              isError={isError}
-              error={error}
-            />
+            loggedUser ? (
+              <User
+                user={matchedUser}
+                isPending={isPending}
+                isError={isError}
+                error={error}
+              />
+            ) : (
+              <Navigate to={"/login"} />
+            )
           }
         />
         <Route

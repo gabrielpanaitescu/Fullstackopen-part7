@@ -6,6 +6,8 @@ const Blog = ({ blog }) => {
   const user = useAuthState();
   const { blogs, updateBlogMutation, deleteBlogMutation } = useBlogApi();
 
+  if (!blog) return null;
+
   const updateLikes = async (blog) => {
     const blogId = blog.id;
     const blogToUpdate = blogs.find((blog) => blog.id === blogId);
