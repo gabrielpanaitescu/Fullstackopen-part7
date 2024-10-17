@@ -4,7 +4,7 @@ const User = ({ user, isPending, isError, error }) => {
   const notifyWith = useNotify();
 
   useEffect(() => {
-    if (isError) notifyWith(`${error.message}. Failed to get user`, "error");
+    if (isError) notifyWith(`${error.message}. Failed to get users`, "error");
   }, [isError, error]);
 
   if (isPending) return <p>loading user...</p>;

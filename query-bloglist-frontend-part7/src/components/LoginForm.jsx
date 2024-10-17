@@ -11,7 +11,7 @@ const LoginForm = () => {
     useLogin();
 
   useEffect(() => {
-    if (user) navigate("/blogs");
+    if (user) navigate("/");
   }, [user, navigate]);
 
   const handleSubmit = (e) => {

@@ -1,13 +1,11 @@
 import { useNotify } from "../contexts/NotificationContext";
 import { useRef, useState } from "react";
-import Blog from "./Blog";
 import Togglable from "./Togglable";
 import BlogForm from "./BlogForm";
 import { useBlogApi } from "../hooks/blogApiHooks";
-import { useAuthDispatch, useAuthState } from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Blogs = () => {
-  const user = useAuthState();
   const blogFormRef = useRef();
   const notifyWith = useNotify();
   const [isBlurred, setIsBlurred] = useState(false);
@@ -17,10 +15,7 @@ const Blogs = () => {
     isGetBlogsError,
     getBlogsError,
     createBlogMutation,
-    updateBlogMutation,
-    deleteBlogMutation,
   } = useBlogApi();
-  const { clearUser } = useAuthDispatch();
 
   const addBlog = async (blogObject) => {
     setIsBlurred(true);
@@ -39,36 +34,25 @@ const Blogs = () => {
     });
   };
 
-  const updateLikesOf = async (blogId) => {
-    const blogToUpdate = blogs.find((blog) => blog.id === blogId);
-
-    const updatedBlog = {
-      ...blogToUpdate,
-      user: blogToUpdate.user.id,
-      likes: blogToUpdate.likes + 1,
-    };
-
-    updateBlogMutation.mutate(updatedBlog);
-  };
-
-  const deleteBlog = async ({ id, title, author }) => {
-    const confirmation = window.confirm(
-      `Remove blog '${title}' by '${author}'`
-    );
-    if (!confirmation) return;
-
-    deleteBlogMutation.mutate(id);
-  };
-
   const blurredStyles = isBlurred
     ? {
         filter: "blur(3px)",
+        paddingLeft: 0,
       }
-    : {};
+    : {
+        paddingLeft: 0,
+      };
 
   if (isGetBlogsPending) return <div>loading...</div>;
 
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
+
+  const blogStyle = {
+    listStyle: "none",
+    border: "1px solid",
+    padding: "7px 14px",
+    marginBottom: 10,
+  };
 
   return (
     <>
@@ -78,15 +62,11 @@ const Blogs = () => {
       </Togglable>
       <ul style={blurredStyles}>
         {sortedBlogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            updateLikes={() => updateLikesOf(blog.id)}
-          >
-            {user.username === blog.user.username && (
-              <button onClick={() => deleteBlog(blog)}>remove</button>
-            )}
-          </Blog>
+          <li key={blog.id} style={blogStyle}>
+            <Link to={`/blogs/${blog.id}`}>
+              {blog.title} {blog.author}
+            </Link>
+          </li>
         ))}
       </ul>
     </>

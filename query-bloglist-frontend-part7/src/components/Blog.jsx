@@ -1,36 +1,49 @@
 import { useState } from "react";
+import { useBlogApi } from "../hooks/blogApiHooks";
+import { useAuthState } from "../contexts/AuthContext";
 
-const Blog = ({ blog, updateLikes, children }) => {
-  const [show, setShow] = useState(false);
+const Blog = ({ blog }) => {
+  const user = useAuthState();
+  const { blogs, updateBlogMutation, deleteBlogMutation } = useBlogApi();
 
-  const blogStyle = {
-    listStyle: "none",
-    border: "1px solid",
-    padding: "7px 14px",
-    marginBottom: 10,
+  const updateLikes = async (blog) => {
+    const blogId = blog.id;
+    const blogToUpdate = blogs.find((blog) => blog.id === blogId);
+
+    const updatedBlog = {
+      ...blogToUpdate,
+      user: blogToUpdate.user.id,
+      likes: blogToUpdate.likes + 1,
+    };
+
+    updateBlogMutation.mutate(updatedBlog);
   };
 
-  const toggleShow = () => {
-    setShow(!show);
+  const deleteBlog = async ({ id, title, author }) => {
+    const confirmation = window.confirm(
+      `Remove blog '${title}' by '${author}'`
+    );
+    if (!confirmation) return;
+
+    deleteBlogMutation.mutate(id);
   };
 
   return (
-    <li style={blogStyle}>
-      <div>
-        <span>{blog.title}</span> <span>{blog.author}</span>{" "}
-        <button onClick={toggleShow}>{show ? "hide" : "show"}</button>
+    <section>
+      <h2>{blog.title}</h2>
+      <p>
+        link:<a> {blog.url}</a>
+      </p>
+      <div className="likesDiv">
+        {blog.likes} likes <button onClick={updateLikes}>like</button>
       </div>
-      {show && (
-        <>
-          <p>{blog.url}</p>
-          <div className="likesDiv">
-            {blog.likes} <button onClick={updateLikes}>like</button>
-          </div>
-          <p>{blog.user.name}</p>
-          {children}
-        </>
-      )}
-    </li>
+      <div>
+        <span>added by {blog.author}</span>
+        {user.username === blog.user.username && (
+          <button onClick={() => deleteBlog(blog)}>remove</button>
+        )}
+      </div>
+    </section>
   );
 };
 

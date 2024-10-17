@@ -1,6 +1,7 @@
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import Blogs from "./components/Blogs";
+import Blog from "./components/Blog";
 import About from "./components/About";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
@@ -9,16 +10,23 @@ import User from "./components/User";
 import { useInitializeAuth, useLogout } from "./hooks/loginApiHooks";
 import { Routes, Route, Link, Navigate, useMatch } from "react-router-dom";
 import { useUsers } from "./hooks/userApiHooks";
+import { useBlogApi } from "./hooks/blogApiHooks";
 
 const App = () => {
   const loggedUser = useInitializeAuth();
   const { logout: handleLogout } = useLogout();
 
   const { users, isPending, isError, error } = useUsers();
+  const { blogs } = useBlogApi();
 
-  const match = useMatch("/users/:id");
-  const matchedUser = match
-    ? users.find((user) => user.id === match.params.id)
+  const userPathMatch = useMatch("/users/:id");
+  const matchedUser = userPathMatch
+    ? users.find((user) => user.id === userPathMatch.params.id)
+    : null;
+
+  const blogPathMatch = useMatch("/blogs/:id");
+  const matchedBlog = blogPathMatch
+    ? blogs.find((blog) => blog.id === blogPathMatch.params.id)
     : null;
 
   const marginRight = {
@@ -76,6 +84,17 @@ const App = () => {
           path="/blogs"
           element={loggedUser ? <Blogs /> : <Navigate to={"/login"} />}
         />
+        <Route
+          path="/blogs/:id"
+          element={
+            loggedUser ? (
+              <Blog blog={matchedBlog} />
+            ) : (
+              <Navigate to={"/login"} />
+            )
+          }
+        />
+
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<LoginForm />} />
       </Routes>
