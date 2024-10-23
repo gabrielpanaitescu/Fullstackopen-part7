@@ -1,53 +1,44 @@
 import { useRef, useState } from "react";
 import Togglable from "./Togglable";
-import { useBlogApi } from "../hooks/blogApiHooks";
+import { useBlogs } from "../hooks/query/useBlogs";
+import { Button, Flex, Stack, Textarea, Title } from "@mantine/core";
+import Comment from "./Comment/Comment";
 
 const BlogComments = ({ blog }) => {
   const [text, setText] = useState("");
   const blogCommentsRef = useRef();
-  const { blogCommentMutation } = useBlogApi();
-
-  const formatDate = (dateString) => {
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(dateString));
-  };
+  const { blogCommentMutation } = useBlogs();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(text);
     blogCommentMutation.mutate({ id: blog.id, text });
   };
 
   return (
-    <div>
-      <h4>Comments</h4>
-      <Togglable buttonLabel="add comment" ref={blogCommentsRef}>
+    <Stack>
+      <Title order={4}>Comments</Title>
+      <Togglable buttonLabel="new" ref={blogCommentsRef}>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={text}
-            required
-            onChange={(e) => setText(e.target.value)}
-          />
-          <button>post comment</button>
+          <Stack align="start">
+            <Textarea
+              description="Type your comment and press post!"
+              placeholder="This blog was awesome...."
+              value={text}
+              required
+              onChange={(e) => setText(e.target.value)}
+            />
+            <Button type="submit" color="teal">
+              Post
+            </Button>
+          </Stack>
         </form>
       </Togglable>
-      <ul>
+      <Flex direction="column" gap="sm">
         {blog.comments.map((comment, index) => (
-          <li key={index}>
-            <div>
-              {comment.user.name} - [{formatDate(comment.date)}]
-            </div>
-            <div>{comment.text}</div>
-          </li>
+          <Comment key={index} comment={comment} />
         ))}
-      </ul>
-    </div>
+      </Flex>
+    </Stack>
   );
 };
 export default BlogComments;

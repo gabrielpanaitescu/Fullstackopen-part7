@@ -1,11 +1,12 @@
-import loginService from "../services/login";
+import loginService from "../../services/login";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import blogService from "../services/blog";
-import { useAuthDispatch, useAuthState } from "../contexts/AuthContext";
+import blogService from "../../services/blog";
+import { useAuthDispatch, useAuthState } from "../../contexts/AuthContext";
 import { useState } from "react";
-import { useNotify } from "../contexts/NotificationContext";
+import { useNotify } from "../../contexts/NotificationContext";
+import { notifications } from "@mantine/notifications";
 
 export const useLogout = () => {
   const { clearUser } = useAuthDispatch();
@@ -21,11 +22,8 @@ export const useLogout = () => {
 };
 
 export const useLogin = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const { setUser } = useAuthDispatch();
   const queryClient = useQueryClient();
-  const notifyWith = useNotify();
 
   const loginMutation = useMutation({
     mutationFn: loginService.login,
@@ -34,26 +32,33 @@ export const useLogin = () => {
     },
   });
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async (credentials) => {
     try {
-      const user = await loginMutation.mutateAsync({ username, password });
+      const user = await loginMutation.mutateAsync(credentials);
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      setUsername("");
-      setPassword("");
-      notifyWith(`logged in as '${user.username}'`);
+
+      notifications.show({
+        title: "Info",
+        message: `Logged in as '${user.username}'`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "green",
+      });
     } catch (error) {
-      notifyWith(error.response.data.error, "error");
+      console.log(error);
+      notifications.show({
+        title: "Info",
+        message: `Login failed. ${error.message || error.response.data.error}`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "red",
+      });
     }
   };
 
   return {
-    username,
-    password,
-    setUsername,
-    setPassword,
     handleLogin,
   };
 };

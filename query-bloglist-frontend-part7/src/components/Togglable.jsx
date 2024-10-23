@@ -1,4 +1,5 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
+import { Button, rem } from "@mantine/core";
 
 const Togglable = forwardRef(({ buttonLabel, children }, ref) => {
   const [visible, setVisible] = useState(false);
@@ -20,10 +21,14 @@ const Togglable = forwardRef(({ buttonLabel, children }, ref) => {
     <>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button onClick={toggleVisibility} mt={rem(10)} color="red">
+          Cancel
+        </Button>
       </div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{buttonLabel}</button>
+        <Button onClick={toggleVisibility} size="compact-sm">
+          {buttonLabel}
+        </Button>
       </div>
     </>
   );

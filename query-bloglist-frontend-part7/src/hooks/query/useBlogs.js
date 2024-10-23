@@ -1,10 +1,9 @@
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import { useNotify } from "../contexts/NotificationContext";
-import blogService from "../services/blog";
+import blogService from "../../services/blog";
+import { notifications } from "@mantine/notifications";
 
-export const useBlogApi = () => {
+export const useBlogs = () => {
   const queryClient = useQueryClient();
-  const notifyWith = useNotify();
 
   const invalidateBlogs = () => {
     queryClient.invalidateQueries({ queryKey: ["Blog"] });
@@ -17,7 +16,13 @@ export const useBlogApi = () => {
     refetchOnWindowFocus: false,
     onError: (error) => {
       console.log(error);
-      notifyWith(`Failed to fetch blogs ${error.message}`, "error");
+      notifications.show({
+        title: "Info",
+        message: `Failed to fetch blogs ${error.message}`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "red",
+      });
     },
   });
 
@@ -28,7 +33,13 @@ export const useBlogApi = () => {
     },
     onError: (error) => {
       console.log(error);
-      notifyWith(`Failed to add blog ${error.message}`, "error");
+      notifications.show({
+        title: "Info",
+        message: `Failed to add blog ${error.message}`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "red",
+      });
     },
   });
 
@@ -43,7 +54,13 @@ export const useBlogApi = () => {
     },
     onError: (error) => {
       console.log(error);
-      notifyWith(`Failed to add blog ${error.message}`, "error");
+      notifications.show({
+        title: "Info",
+        message: `Failed to update blog ${error.message}`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "red",
+      });
     },
   });
 
@@ -54,7 +71,13 @@ export const useBlogApi = () => {
     },
     onError: (error) => {
       console.log(error);
-      notifyWith(`Failed to delete blog ${error.message}`, "error");
+      notifications.show({
+        title: "Info",
+        message: `Failed to delete blog ${error.message}`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "red",
+      });
     },
   });
 
@@ -65,7 +88,13 @@ export const useBlogApi = () => {
     },
     onError: (error) => {
       console.log(error);
-      notifyWith(`Failed to add comment. ${error.message}`, "error");
+      notifications.show({
+        title: "Info",
+        message: `Failed to add comment. ${error.message}`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "red",
+      });
     },
   });
 
@@ -73,6 +102,8 @@ export const useBlogApi = () => {
     blogs: getBlogs.data || [],
     isGetBlogsPending: getBlogs.isPending,
     isGetBlogsError: getBlogs.isError,
+    isGetBlogsLoading: getBlogs.isLoading,
+    isGetBlogsFetching: getBlogs.isFetching,
     getBlogsError: getBlogs.error,
     createBlogMutation,
     updateBlogMutation,

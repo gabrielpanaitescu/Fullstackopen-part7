@@ -35,6 +35,7 @@ const update = async (updatedObject) => {
 const deleteItem = async (id) => {
   const url = `${baseUrl}/${id}`;
   const response = await axios.delete(url, getConfig());
+  console.log(response.data);
   return response.data;
 };
 

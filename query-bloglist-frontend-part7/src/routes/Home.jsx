@@ -1,8 +1,10 @@
+import { Title, Text, Stack } from "@mantine/core";
+
 export default function Home() {
   return (
-    <div>
-      <h3>Home</h3>
-      <p>
+    <Stack>
+      <Title order={1}>Home</Title>
+      <Text>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe
         quibusdam pariatur a aliquam, veniam labore amet magni sapiente
         distinctio assumenda sit molestias cupiditate soluta minus maiores
@@ -21,7 +23,7 @@ export default function Home() {
         fugit voluptates dolorem, excepturi ducimus vero esse consequuntur
         voluptate ea. Voluptates vel id exercitationem dolor dignissimos
         aperiam.
-      </p>
-    </div>
+      </Text>
+    </Stack>
   );
 }

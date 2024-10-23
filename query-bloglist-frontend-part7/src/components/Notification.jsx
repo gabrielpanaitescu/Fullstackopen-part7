@@ -1,21 +1,29 @@
 import { useNotificationState } from "../contexts/NotificationContext";
+import { Notification, rem } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 
-const Notification = () => {
+const NotificationComponent = () => {
   const info = useNotificationState();
 
   if (info.message === null) return;
 
-  const style = {
-    color: info.type === "info" ? "green" : info.type === "error" ? "red" : "",
-    borderStyle: "solid",
-    backgroundColor: "lightgrey",
-    fontSize: "1.15rem",
-    borderRadius: 5,
-    padding: "7px 14px",
-    marginBottom: "10px",
-  };
+  const color =
+    info.type === "info" ? "green" : info.type === "error" ? "red" : "";
 
-  return <p style={style}>{info.message}</p>;
+  return (
+    <Notification
+      withCloseButton={false}
+      title={info.type}
+      color={color}
+      style={{
+        position: "fixed",
+        top: rem(70),
+        left: rem(20),
+      }}
+    >
+      {info.message}
+    </Notification>
+  );
 };
 
-export default Notification;
+export default NotificationComponent;

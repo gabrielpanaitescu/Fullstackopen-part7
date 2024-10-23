@@ -7,6 +7,12 @@ const getUsers = async () => {
   return response.data;
 };
 
+const createUser = async (newUser) => {
+  const response = await axios.post(url, newUser);
+  return response.data;
+};
+
 export default {
   getUsers,
+  createUser,
 };

@@ -1,0 +1,55 @@
+import { Button, TextInput, Group } from "@mantine/core";
+import { useForm } from "@mantine/form";
+
+const BlogForm = ({ createBlog }) => {
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      title: "",
+      author: "",
+      url: "",
+    },
+    validate: {
+      title: (value) => (value.length < 1 ? "Title can't be empty" : null),
+      author: (value) => (value.length < 1 ? "Author can't be empty" : null),
+      url: (value) => (value.length < 1 ? "Url can't be empty" : null),
+    },
+  });
+
+  const addBlog = ({ title, author, url }) => {
+    createBlog({
+      title,
+      author,
+      url,
+    });
+    form.reset();
+  };
+
+  return (
+    <form onSubmit={form.onSubmit((values) => addBlog(values))}>
+      <TextInput
+        label="Title"
+        placeholder="The Blog"
+        key={form.key("title")}
+        {...form.getInputProps("title")}
+      />
+      <TextInput
+        label="Author"
+        placeholder="Mr. Blog Writer"
+        key={form.key("author")}
+        {...form.getInputProps("author")}
+      />
+      <TextInput
+        label="Url"
+        placeholder="http://www.random-link.com"
+        key={form.key("url")}
+        {...form.getInputProps("url")}
+      />
+      <Group mt="md">
+        <Button type="submit">Add Blog</Button>
+      </Group>
+    </form>
+  );
+};
+
+export default BlogForm;

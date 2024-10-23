@@ -1,10 +1,18 @@
 import { useEffect } from "react";
-import { useNotify } from "../contexts/NotificationContext";
-const User = ({ user, isPending, isError, error }) => {
-  const notifyWith = useNotify();
+import { Title, Text, List, rem, Anchor } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { Link } from "react-router-dom";
 
+const User = ({ user, isPending, isError, error }) => {
   useEffect(() => {
-    if (isError) notifyWith(`${error.message}. Failed to get users`, "error");
+    if (isError)
+      notifications.show({
+        title: "Info",
+        message: `${error.message}. Failed to get users`,
+        position: "top-center",
+        autoClose: 5000,
+        color: "red",
+      });
   }, [isError, error]);
 
   if (isPending) return <p>loading user...</p>;
@@ -13,12 +21,19 @@ const User = ({ user, isPending, isError, error }) => {
 
   return (
     <div>
-      <h3>{user.name}'s added blogs</h3>
-      <ul>
+      <Title mb={rem(5)} order={3}>
+        {user.name}'s added blogs
+      </Title>
+      {user.blogs.length === 0 && <Text>No blogs found</Text>}
+      <List listStyleType="disc">
         {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <List.Item key={blog.id}>
+            <Anchor component={Link} to={`/blogs/${blog.id}`}>
+              {blog.title}
+            </Anchor>
+          </List.Item>
         ))}
-      </ul>
+      </List>
     </div>
   );
 };
