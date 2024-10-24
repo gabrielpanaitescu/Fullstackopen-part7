@@ -8,6 +8,6 @@
   justify-content: center;
   gap: rem(10px);
   align-items: center;
-  padding-top: var(--mantine-spacing-xl);
-  padding-bottom: var(--mantine-spacing-xl);
+  padding-top: var(--mantine-spacing-md);
+  padding-bottom: var(--mantine-spacing-sm);
 }

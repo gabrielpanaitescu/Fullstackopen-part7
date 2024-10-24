@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../hooks/query/useAuth";
+import { useLogin } from "../../hooks/query/useAuth";
 import { useEffect } from "react";
-import { useAuthState } from "../contexts/AuthContext";
-import { useCreateUser } from "../hooks/query/useUsers";
+import { useAuthState } from "../../contexts/AuthContext";
+import { useCreateUser } from "../../hooks/query/useUsers";
 
 import { useToggle, upperFirst } from "@mantine/hooks";
 import { useForm } from "@mantine/form";

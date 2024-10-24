@@ -1,18 +1,17 @@
 import { useRef, useState } from "react";
-import Togglable from "../components/Togglable";
-import BlogForm from "../components/BlogForm/BlogForm";
-import { useBlogs } from "../hooks/query/useBlogs";
+import Togglable from "../../components/ui/Togglable";
+import BlogForm from "../../components/ui/BlogForm/BlogForm";
+import { useBlogs } from "../../hooks/query/useBlogs";
 import { Link } from "react-router-dom";
 import {
   Loader,
   Center,
   Title,
   Anchor,
-  rem,
-  Flex,
   Text,
   Table,
   Skeleton,
+  Stack,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
@@ -58,19 +57,15 @@ const BlogList = () => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
 
   return (
-    <Flex direction="column" gap={rem(5)} align="center" mb={rem(20)}>
-      <Title order={3}>Blogs</Title>
-      <Togglable buttonLabel="Add Blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog} />
-      </Togglable>
-      <Title mt={rem(20)} order={4}></Title>
-      <Table
-        striped
-        highlightOnHover
-        withTableBorder
-        withColumnBorders
-        maw={rem(550)}
-      >
+    <>
+      <Stack gap={5} mb={20}>
+        <Title order={3}>Blogs</Title>
+        <Togglable buttonLabel="Add Blog" ref={blogFormRef}>
+          <BlogForm createBlog={addBlog} />
+        </Togglable>
+      </Stack>
+
+      <Table striped highlightOnHover withTableBorder withColumnBorders>
         <Table.Thead>
           <Table.Tr>
             <Table.Th>
@@ -107,7 +102,7 @@ const BlogList = () => {
           )}
         </Table.Tbody>
       </Table>
-    </Flex>
+    </>
   );
 };
 

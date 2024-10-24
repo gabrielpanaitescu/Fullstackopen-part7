@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useGetUsers } from "../hooks/query/useUsers";
+import { useGetUsers } from "../../hooks/query/useUsers";
 
 import { useEffect } from "react";
 import { Anchor, Loader, Table, Text, Center, rem } from "@mantine/core";
@@ -27,13 +27,7 @@ const Users = () => {
     );
 
   return (
-    <Table
-      striped
-      highlightOnHover
-      withTableBorder
-      withColumnBorders
-      maw={rem(600)}
-    >
+    <Table striped highlightOnHover withTableBorder withColumnBorders>
       <Table.Thead>
         <Table.Tr>
           <Table.Th>

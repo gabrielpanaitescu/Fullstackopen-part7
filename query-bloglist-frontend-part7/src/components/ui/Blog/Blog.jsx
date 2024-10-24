@@ -1,13 +1,11 @@
-import { useBlogs } from "../../hooks/query/useBlogs";
-import { useAuthState } from "../../contexts/AuthContext";
+import { useBlogs } from "../../../hooks/query/useBlogs";
+import { useAuthState } from "../../../contexts/AuthContext";
 import BlogComments from "../BlogComments";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
   Center,
-  Container,
-  Flex,
   Group,
   Loader,
   rem,
@@ -65,43 +63,41 @@ const Blog = ({ blog }) => {
   if (!blog) return null;
 
   return (
-    <Container size="md">
-      <Stack direction="column" align={"start"} gap={50}>
-        <Card padding="lg" radius="md" miw={rem(350)}>
-          <Card.Section withBorder inheritPadding py="xs" mb="xs">
-            <Stack>
-              <Text fw={700}>{blog.title}</Text>
-              <Text fs="italic">added by {blog.author}</Text>
-            </Stack>
-          </Card.Section>
-          <Stack align="start">
-            <Text c="dimmed">
-              link:<a> {blog.url}</a>
-            </Text>
-            <Group>
-              <Text>{blog.likes} likes</Text>
-              <Button
-                size="compact-sm"
-                color="teal"
-                onClick={() => updateLikes(blog)}
-              >
-                like
-              </Button>
-            </Group>
-            {user.username === blog.user.username && (
-              <Button
-                size="compact-sm"
-                color="red"
-                onClick={() => deleteBlog(blog)}
-              >
-                remove
-              </Button>
-            )}
+    <Stack direction="column" gap={50}>
+      <Card padding="lg" radius="md" maw={rem(500)}>
+        <Card.Section withBorder inheritPadding py="xs" mb="xs">
+          <Stack>
+            <Text fw={700}>{blog.title}</Text>
+            <Text fs="italic">added by {blog.author}</Text>
           </Stack>
-        </Card>
-        <BlogComments blog={blog} />
-      </Stack>
-    </Container>
+        </Card.Section>
+        <Stack align="start">
+          <Text c="dimmed">
+            link:<a> {blog.url}</a>
+          </Text>
+          <Group>
+            <Text>{blog.likes} likes</Text>
+            <Button
+              size="compact-sm"
+              color="teal"
+              onClick={() => updateLikes(blog)}
+            >
+              like
+            </Button>
+          </Group>
+          {user.username === blog.user.username && (
+            <Button
+              size="compact-sm"
+              color="red"
+              onClick={() => deleteBlog(blog)}
+            >
+              remove
+            </Button>
+          )}
+        </Stack>
+      </Card>
+      <BlogComments blog={blog} />
+    </Stack>
   );
 };
 

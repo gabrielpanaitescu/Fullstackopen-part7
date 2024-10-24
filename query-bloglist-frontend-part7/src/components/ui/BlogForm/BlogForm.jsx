@@ -1,4 +1,4 @@
-import { Button, TextInput, Group } from "@mantine/core";
+import { Button, TextInput, Group, rem } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 const BlogForm = ({ createBlog }) => {
@@ -26,7 +26,10 @@ const BlogForm = ({ createBlog }) => {
   };
 
   return (
-    <form onSubmit={form.onSubmit((values) => addBlog(values))}>
+    <form
+      onSubmit={form.onSubmit((values) => addBlog(values))}
+      style={{ maxWidth: rem(400) }}
+    >
       <TextInput
         label="Title"
         placeholder="The Blog"

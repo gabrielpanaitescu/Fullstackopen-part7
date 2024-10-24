@@ -14,6 +14,8 @@ import {
   Flex,
 } from "@mantine/core";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
+import { useLogout } from "../../../hooks/query/useAuth";
+import { useAuthState } from "../../../contexts/AuthContext";
 
 const links = [
   { link: "/", label: "Home" },
@@ -22,7 +24,9 @@ const links = [
   { link: "/login", label: "Login" },
 ];
 
-export function Header({ handleLogout, loggedUser }) {
+export function Header() {
+  const loggedUser = useAuthState();
+  const { logout: handleLogout } = useLogout();
   const [opened, { toggle, close }] = useDisclosure(false);
   const location = useLocation();
   const [active, setActive] = useState(location.pathname);
