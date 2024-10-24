@@ -3,6 +3,7 @@ import { useAuthState } from "../../../contexts/AuthContext";
 import BlogComments from "../BlogComments";
 import { useNavigate } from "react-router-dom";
 import {
+  Anchor,
   Button,
   Card,
   Center,
@@ -68,15 +69,15 @@ const Blog = ({ blog }) => {
         <Card.Section withBorder inheritPadding py="xs" mb="xs">
           <Stack>
             <Text fw={700}>{blog.title}</Text>
-            <Text fs="italic">added by {blog.author}</Text>
+            <Text fs="italic">by {blog.author}</Text>
           </Stack>
         </Card.Section>
         <Stack align="start">
-          <Text c="dimmed">
-            link:<a> {blog.url}</a>
-          </Text>
+          <Anchor href={blog.url}>Link</Anchor>
           <Group>
-            <Text>{blog.likes} likes</Text>
+            <Text>
+              {blog.likes} {blog.likes <= 1 ? "like" : "likes"}
+            </Text>
             <Button
               size="compact-sm"
               color="teal"
