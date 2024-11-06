@@ -41,7 +41,6 @@ const Blog = ({ blog }) => {
 
     deleteBlogMutation.mutate(id, {
       onSuccess: (returnedBlog) => {
-        console.log(returnedBlog);
         notifications.show({
           title: "Info",
           message: `Successfully deleted blog '${title}'`,

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useGetUsers } from "../../hooks/query/useUsers";
 
 import { useEffect } from "react";
-import { Anchor, Loader, Table, Text, Center, rem } from "@mantine/core";
+import { Anchor, Loader, Table, Text, Center } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
 const Users = () => {

@@ -23,8 +23,6 @@ const BlogComments = ({ blog }) => {
       }
     );
   };
-  console.log(isBlurred);
-
   return (
     <Stack>
       <Title order={4}>Comments</Title>
@@ -47,7 +45,7 @@ const BlogComments = ({ blog }) => {
       <Flex direction="column" gap="sm">
         {blog.comments.map((comment, index) => {
           return isBlurred ? (
-            <Skeleton h={100} w={400} animate={true} />
+            <Skeleton key={index} h={100} w={400} animate={true} />
           ) : (
             <Comment key={index} comment={comment} />
           );

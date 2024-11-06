@@ -16,6 +16,7 @@ import {
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import { useLogout } from "../../../hooks/query/useAuth";
 import { useAuthState } from "../../../contexts/AuthContext";
+import { notifications } from "@mantine/notifications";
 
 const links = [
   { link: "/", label: "Home" },
@@ -46,8 +47,20 @@ export function Header() {
           (link.link === "/blogs" && active.startsWith("/blogs")) ||
           undefined
         }
-        onClick={() => {
+        onClick={(e) => {
           close();
+          if (!loggedUser && link.link !== "/") {
+            if (active === "/login") e.preventDefault();
+            notifications.clean();
+            notifications.show({
+              title: "Unauthorized",
+              message: `You need to be logged in order to access the ${link.label} section`,
+              position: "top-center",
+              autoClose: 3000,
+              color: "red",
+            });
+            return;
+          }
           setActive(link.link);
         }}
       >

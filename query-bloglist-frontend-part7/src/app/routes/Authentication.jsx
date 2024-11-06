@@ -65,8 +65,7 @@ const Authentication = () => {
       };
 
       createUserMutation.mutate(newUser, {
-        onSuccess(createdUser) {
-          console.log(createdUser);
+        onSuccess() {
           handleLogin(credentials);
         },
       });

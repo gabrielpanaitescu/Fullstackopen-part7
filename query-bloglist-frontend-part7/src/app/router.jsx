@@ -3,6 +3,7 @@ import {
   RouterProvider,
   Navigate,
   useMatch,
+  useParams,
 } from "react-router-dom";
 import AppRoot from "./routes/root";
 import Home from "./routes/Home";
@@ -15,11 +16,12 @@ import { useGetUsers } from "../hooks/query/useUsers";
 import { useBlogs } from "../hooks/query/useBlogs";
 import { useAuthState } from "../contexts/AuthContext";
 import { useInitializeAuth } from "../hooks/query/useAuth";
+import ErrorElement from "./routes/ErrorElement";
 
 const ProtectedRoute = ({ children }) => {
   const user = useAuthState();
 
-  return user ? children : <Navigate to={"/login"} />;
+  return user ? children : <Navigate to={"/login"} replace />;
 };
 
 const UserLoader = () => {
@@ -28,6 +30,9 @@ const UserLoader = () => {
   const matchedUser = match
     ? users.find((user) => user.id === match.params.id)
     : null;
+
+  if (!matchedUser)
+    return <ErrorElement error={{ status: 404, statusText: "Not found" }} />;
 
   return (
     <User
@@ -41,58 +46,66 @@ const UserLoader = () => {
 
 const BlogLoader = () => {
   const { blogs } = useBlogs();
-  const match = useMatch("/blogs/:id");
-  const matchedBlog = match
-    ? blogs.find((blog) => blog.id === match.params.id)
-    : null;
+  const { id } = useParams();
+
+  const matchedBlog = blogs.find((blog) => blog.id === id);
+
+  if (!matchedBlog)
+    return <ErrorElement error={{ status: 404, statusText: "Not found" }} />;
 
   return <Blog blog={matchedBlog} />;
 };
 
 const router = createBrowserRouter([
   {
-    path: "/",
     element: <AppRoot />,
+    path: "/",
+    errorElement: <ErrorElement />,
     children: [
       {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/users",
-        element: (
-          <ProtectedRoute>
-            <Users />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/users/:id",
-        element: (
-          <ProtectedRoute>
-            <UserLoader />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/blogs",
-        element: (
-          <ProtectedRoute>
-            <BlogList />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/blogs/:id",
-        element: (
-          <ProtectedRoute>
-            <BlogLoader />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/login",
-        element: <Authentication />,
+        errorElement: <ErrorElement />,
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+          {
+            path: "/users",
+            element: (
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/users/:id",
+            element: (
+              <ProtectedRoute>
+                <UserLoader />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/blogs",
+            element: (
+              <ProtectedRoute>
+                <BlogList />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/blogs/:id",
+            element: (
+              <ProtectedRoute>
+                <BlogLoader />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "/login",
+            element: <Authentication />,
+          },
+        ],
       },
     ],
   },

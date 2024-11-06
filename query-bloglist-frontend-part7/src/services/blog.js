@@ -28,19 +28,16 @@ const update = async (updatedObject) => {
   const url = `${baseUrl}/${id}`;
 
   const response = await axios.put(url, updatedObject, getConfig());
-  console.log(response);
   return response.data;
 };
 
 const deleteItem = async (id) => {
   const url = `${baseUrl}/${id}`;
   const response = await axios.delete(url, getConfig());
-  console.log(response.data);
   return response.data;
 };
 
 const addComment = async ({ id, text }) => {
-  console.log(id, text);
   const url = `${baseUrl}/${id}/comments`;
   const response = await axios.post(url, { text }, getConfig());
 
