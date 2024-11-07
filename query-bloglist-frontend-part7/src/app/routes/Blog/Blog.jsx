@@ -1,6 +1,6 @@
 import { useBlogs } from "../../../hooks/query/useBlogs";
 import { useAuthState } from "../../../contexts/AuthContext";
-import BlogComments from "../BlogComments";
+import BlogComments from "../../../components/ui/BlogComments";
 import { useNavigate } from "react-router-dom";
 import {
   Anchor,
@@ -14,6 +14,7 @@ import {
   Text,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
+import ErrorElement from "../ErrorElement";
 
 const Blog = ({ blog }) => {
   const user = useAuthState();
@@ -60,7 +61,8 @@ const Blog = ({ blog }) => {
       </Center>
     );
   }
-  if (!blog) return null;
+  if (!blog)
+    return <ErrorElement error={{ status: 404, statusText: "Not found" }} />;
 
   return (
     <Stack direction="column" gap={50}>

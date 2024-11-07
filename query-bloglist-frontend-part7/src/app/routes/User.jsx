@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Title, Text, List, rem, Anchor } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { Link } from "react-router-dom";
+import ErrorElement from "./ErrorElement";
 
 const User = ({ user, isPending, isError, error }) => {
   useEffect(() => {
@@ -17,7 +18,8 @@ const User = ({ user, isPending, isError, error }) => {
 
   if (isPending) return <p>loading user...</p>;
 
-  if (!user) return null;
+  if (!user)
+    return <ErrorElement error={{ status: 404, statusText: "Not found" }} />;
 
   return (
     <div>

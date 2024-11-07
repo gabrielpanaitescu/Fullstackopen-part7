@@ -8,9 +8,9 @@ import {
 import AppRoot from "./routes/root";
 import Home from "./routes/Home";
 import BlogList from "./routes/BlogList";
-import Blog from "../components/ui/Blog/Blog";
+import Blog from "./routes/Blog/Blog";
 import Users from "./routes/Users";
-import User from "../components/ui/User";
+import User from "./routes/User";
 import Authentication from "./routes/Authentication";
 import { useGetUsers } from "../hooks/query/useUsers";
 import { useBlogs } from "../hooks/query/useBlogs";
@@ -31,9 +31,6 @@ const UserLoader = () => {
     ? users.find((user) => user.id === match.params.id)
     : null;
 
-  if (!matchedUser)
-    return <ErrorElement error={{ status: 404, statusText: "Not found" }} />;
-
   return (
     <User
       user={matchedUser}
@@ -49,9 +46,6 @@ const BlogLoader = () => {
   const { id } = useParams();
 
   const matchedBlog = blogs.find((blog) => blog.id === id);
-
-  if (!matchedBlog)
-    return <ErrorElement error={{ status: 404, statusText: "Not found" }} />;
 
   return <Blog blog={matchedBlog} />;
 };
