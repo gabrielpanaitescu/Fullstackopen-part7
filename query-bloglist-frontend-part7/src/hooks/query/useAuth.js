@@ -13,7 +13,7 @@ export const useLogout = () => {
 
   const logout = () => {
     clearUser();
-    localStorage.removeItem("loggedUser");
+    localStorage.removeItem("loggedUserBlogAppReactQuery");
   };
 
   return {
@@ -35,7 +35,10 @@ export const useLogin = () => {
   const handleLogin = async (credentials) => {
     try {
       const user = await loginMutation.mutateAsync(credentials);
-      window.localStorage.setItem("loggedUser", JSON.stringify(user));
+      window.localStorage.setItem(
+        "loggedUserBlogAppReactQuery",
+        JSON.stringify(user)
+      );
       blogService.setToken(user.token);
       setUser(user);
 
@@ -70,7 +73,7 @@ export const useInitializeAuth = () => {
   const { setUser } = useAuthDispatch();
 
   useEffect(() => {
-    const loggedUserJSON = localStorage.getItem("loggedUser");
+    const loggedUserJSON = localStorage.getItem("loggedUserBlogAppReactQuery");
 
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);

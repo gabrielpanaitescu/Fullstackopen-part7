@@ -17,6 +17,13 @@ import { useBlogs } from "../hooks/query/useBlogs";
 import { useAuthState } from "../contexts/AuthContext";
 import { useInitializeAuth } from "../hooks/query/useAuth";
 import ErrorElement from "./routes/ErrorElement";
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { useLogout } from "../hooks/query/useAuth.js";
 
 const ProtectedRoute = ({ children }) => {
   const user = useAuthState();
@@ -44,6 +51,8 @@ const UserLoader = () => {
 const BlogLoader = () => {
   const { blogs } = useBlogs();
   const { id } = useParams();
+
+  console.log("blogs", blogs);
 
   const matchedBlog = blogs.find((blog) => blog.id === id);
 
@@ -107,9 +116,32 @@ const router = createBrowserRouter([
 
 export const AppRouter = () => {
   const { authInitializing } = useInitializeAuth();
+  const { logout } = useLogout();
+
+  const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error) => {
+        console.log("error queryCache", error);
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        console.log("error mutationCache", error);
+
+        if (error.status === 401) {
+          console.log("logging out");
+          logout();
+        }
+      },
+    }),
+  });
 
   if (authInitializing) {
     return null;
   }
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 };
