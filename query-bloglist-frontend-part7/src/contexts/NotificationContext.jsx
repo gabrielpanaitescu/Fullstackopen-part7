@@ -1,3 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { createContext, useContext, useReducer } from "react";
 
 export const NotificationContext = createContext();

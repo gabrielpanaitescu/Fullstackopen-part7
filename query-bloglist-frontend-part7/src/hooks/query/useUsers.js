@@ -1,9 +1,9 @@
 import userService from "../../services/users";
-import { useQuery, useMutation, QueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
 
 export const useCreateUser = () => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const createUserMutation = useMutation({
     mutationFn: userService.createUser,
@@ -11,7 +11,7 @@ export const useCreateUser = () => {
       queryClient.invalidateQueries({ queryKey: ["User"] });
       notifications.show({
         title: "Info",
-        message: `New user created successfully`,
+        message: "New user created successfully",
         position: "top-center",
         autoClose: 5000,
         color: "green",

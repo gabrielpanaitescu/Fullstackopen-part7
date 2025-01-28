@@ -6,7 +6,7 @@ export const useBlogs = () => {
   const queryClient = useQueryClient();
 
   const invalidateBlogs = () => {
-    queryClient.invalidateQueries({ queryKey: ["Blog"] });
+    return queryClient.invalidateQueries({ queryKey: ["Blog"] });
   };
 
   const getBlogs = useQuery({
@@ -28,7 +28,7 @@ export const useBlogs = () => {
 
   const createBlogMutation = useMutation({
     mutationFn: blogService.create,
-    onSuccess: () => {
+    onSuccess: (_returnedBlog) => {
       invalidateBlogs();
     },
     onError: (error) => {
@@ -84,7 +84,7 @@ export const useBlogs = () => {
   const blogCommentMutation = useMutation({
     mutationFn: blogService.addComment,
     onSuccess: () => {
-      invalidateBlogs();
+      return invalidateBlogs();
     },
     onError: (error) => {
       console.log(error);
@@ -104,6 +104,8 @@ export const useBlogs = () => {
     isGetBlogsError: getBlogs.isError,
     isGetBlogsLoading: getBlogs.isLoading,
     isGetBlogsFetching: getBlogs.isFetching,
+    getBlogsStatus: getBlogs.status,
+    getBlogsFetchStatus: getBlogs.fetchStatus,
     getBlogsError: getBlogs.error,
     createBlogMutation,
     updateBlogMutation,

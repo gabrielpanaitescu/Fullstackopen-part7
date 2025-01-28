@@ -35,13 +35,11 @@ const Blog = ({ blog }) => {
   };
 
   const deleteBlog = async ({ id, title, author }) => {
-    const confirmation = window.confirm(
-      `Remove blog '${title}' by '${author}'`
-    );
+    const confirmation = window.confirm(`Remove blog '${title}' by '${author}'`);
     if (!confirmation) return;
 
     deleteBlogMutation.mutate(id, {
-      onSuccess: (returnedBlog) => {
+      onSuccess: (_returnedBlog) => {
         notifications.show({
           title: "Info",
           message: `Successfully deleted blog '${title}'`,

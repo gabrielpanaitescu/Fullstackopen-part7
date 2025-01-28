@@ -24,6 +24,7 @@ const User = ({ user, isPending, isError, error }) => {
   return (
     <div>
       <Title mb={rem(5)} order={3}>
+        {/* eslint-disable-next-line */}
         {user.name}'s added blogs
       </Title>
       {user.blogs.length === 0 && <Text>No blogs found</Text>}

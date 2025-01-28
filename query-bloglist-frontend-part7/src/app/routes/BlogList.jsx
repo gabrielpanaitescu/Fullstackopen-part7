@@ -18,13 +18,7 @@ import { notifications } from "@mantine/notifications";
 const BlogList = () => {
   const blogFormRef = useRef();
   const [isBlurred, setIsBlurred] = useState(false);
-  const {
-    blogs,
-    isGetBlogsPending,
-    isGetBlogsError,
-    getBlogsError,
-    createBlogMutation,
-  } = useBlogs();
+  const { blogs, isGetBlogsPending, createBlogMutation } = useBlogs();
 
   const addBlog = async (blogObject) => {
     setIsBlurred(true);

@@ -1,6 +1,5 @@
 import { useNotificationState } from "../../contexts/NotificationContext";
 import { Notification, rem } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 
 const NotificationComponent = () => {
   const info = useNotificationState();

@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import blogService from "../../services/blog";
 import { useAuthDispatch, useAuthState } from "../../contexts/AuthContext";
 import { useState } from "react";
-import { useNotify } from "../../contexts/NotificationContext";
 import { notifications } from "@mantine/notifications";
 
 export const useLogout = () => {
@@ -83,6 +82,7 @@ export const useInitializeAuth = () => {
     } else if (!loggedUserJSON) {
       setAuthInitializing(false);
     }
+    /*eslint-disable-next-line*/
   }, []);
 
   return { user, authInitializing };
