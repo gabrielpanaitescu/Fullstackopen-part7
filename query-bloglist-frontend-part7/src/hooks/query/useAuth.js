@@ -6,6 +6,7 @@ import blogService from "../../services/blog";
 import { useAuthDispatch, useAuthState } from "../../contexts/AuthContext";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
+import { AxiosError } from "axios";
 
 export const useLogout = () => {
   const { clearUser } = useAuthDispatch();
@@ -50,9 +51,20 @@ export const useLogin = () => {
       });
     } catch (error) {
       console.log(error);
+
+      let errorMessage;
+
+      if (error instanceof AxiosError && error.response.data?.error) {
+        errorMessage = error.response.data?.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = "Unknown authentication error. Please try again.";
+      }
+
       notifications.show({
         title: "Info",
-        message: `Login failed. ${error.message || error.response.data.error}`,
+        message: `Login failed. Error: ${errorMessage}`,
         position: "top-center",
         autoClose: 5000,
         color: "red",

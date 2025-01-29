@@ -1,6 +1,7 @@
 import userService from "../../services/users";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { notifications } from "@mantine/notifications";
+import { AxiosError } from "axios";
 
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
@@ -19,9 +20,20 @@ export const useCreateUser = () => {
     },
     onError: (error) => {
       console.log(error);
+
+      let errorMessage;
+
+      if (error instanceof AxiosError && error.response.data?.error) {
+        errorMessage = error.response.data?.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = "Unknown authentication error. Please try again.";
+      }
+
       notifications.show({
         title: "Info",
-        message: `Failed to create user. ${error.message}`,
+        message: `Failed to create user. Error: ${errorMessage}`,
         position: "top-center",
         autoClose: 5000,
         color: "red",

@@ -1,6 +1,7 @@
-import { useBlogs } from "../../../hooks/query/useBlogs";
-import { useAuthState } from "../../../contexts/AuthContext";
-import BlogComments from "../../../components/ui/BlogComments";
+import { useBlogs } from "../../hooks/query/useBlogs";
+import { useAuthState } from "../../contexts/AuthContext";
+import BlogComments from "../../components/ui/BlogComments";
+import ErrorElement from "./ErrorElement";
 import { useNavigate } from "react-router-dom";
 import {
   Anchor,
@@ -14,13 +15,45 @@ import {
   Text,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import ErrorElement from "../ErrorElement";
+
+export const BlogDetails = ({ blog, user, deleteBlog, updateLikes }) => (
+  <Card padding="lg" radius="md" maw={rem(500)}>
+    <Card.Section withBorder inheritPadding py="xs" mb="xs">
+      <Stack>
+        <Text fw={700}>{blog.title}</Text>
+        <Text fs="italic">by {blog.author}</Text>
+      </Stack>
+    </Card.Section>
+    <Stack align="start">
+      <Anchor href={blog.url}>Link</Anchor>
+      <Group>
+        <Text>
+          {blog.likes} {blog.likes <= 1 ? "like" : "likes"}
+        </Text>
+        <Button
+          size="compact-sm"
+          color="teal"
+          onClick={() => updateLikes(blog)}
+        >
+          like
+        </Button>
+      </Group>
+      {user.username === blog.user.username && (
+        <Button size="compact-sm" color="red" onClick={() => deleteBlog(blog)}>
+          remove
+        </Button>
+      )}
+    </Stack>
+  </Card>
+);
 
 const Blog = ({ blog }) => {
   const user = useAuthState();
   const navigate = useNavigate();
   const { blogs, updateBlogMutation, deleteBlogMutation, isGetBlogsPending } =
     useBlogs();
+
+  console.log("user", user);
 
   const updateLikes = async (blog) => {
     const blogId = blog.id;
@@ -35,7 +68,9 @@ const Blog = ({ blog }) => {
   };
 
   const deleteBlog = async ({ id, title, author }) => {
-    const confirmation = window.confirm(`Remove blog '${title}' by '${author}'`);
+    const confirmation = window.confirm(
+      `Remove blog '${title}' by '${author}'`
+    );
     if (!confirmation) return;
 
     deleteBlogMutation.mutate(id, {
@@ -64,38 +99,12 @@ const Blog = ({ blog }) => {
 
   return (
     <Stack direction="column" gap={50}>
-      <Card padding="lg" radius="md" maw={rem(500)}>
-        <Card.Section withBorder inheritPadding py="xs" mb="xs">
-          <Stack>
-            <Text fw={700}>{blog.title}</Text>
-            <Text fs="italic">by {blog.author}</Text>
-          </Stack>
-        </Card.Section>
-        <Stack align="start">
-          <Anchor href={blog.url}>Link</Anchor>
-          <Group>
-            <Text>
-              {blog.likes} {blog.likes <= 1 ? "like" : "likes"}
-            </Text>
-            <Button
-              size="compact-sm"
-              color="teal"
-              onClick={() => updateLikes(blog)}
-            >
-              like
-            </Button>
-          </Group>
-          {user.username === blog.user.username && (
-            <Button
-              size="compact-sm"
-              color="red"
-              onClick={() => deleteBlog(blog)}
-            >
-              remove
-            </Button>
-          )}
-        </Stack>
-      </Card>
+      <BlogDetails
+        blog={blog}
+        user={user}
+        updateLikes={updateLikes}
+        deleteBlog={deleteBlog}
+      />
       <BlogComments blog={blog} />
     </Stack>
   );

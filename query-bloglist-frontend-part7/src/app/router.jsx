@@ -8,7 +8,7 @@ import {
 import AppRoot from "./routes/root";
 import Home from "./routes/Home";
 import BlogList from "./routes/BlogList";
-import Blog from "./routes/Blog/Blog";
+import Blog from "./routes/Blog";
 import Users from "./routes/Users";
 import User from "./routes/User";
 import Authentication from "./routes/Authentication";
@@ -52,8 +52,6 @@ const UserLoader = () => {
 const BlogLoader = () => {
   const { blogs } = useBlogs();
   const { id } = useParams();
-
-  console.log("blogs", blogs);
 
   const matchedBlog = blogs.find((blog) => blog.id === id);
 
@@ -130,7 +128,6 @@ export const AppRouter = () => {
         console.log("error mutationCache", error);
 
         if (error.status === 401) {
-          console.log("logging out");
           logout();
         }
       },

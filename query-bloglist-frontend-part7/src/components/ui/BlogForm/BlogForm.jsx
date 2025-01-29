@@ -31,25 +31,30 @@ const BlogForm = ({ createBlog }) => {
       style={{ maxWidth: rem(400) }}
     >
       <TextInput
+        data-testid="titleInput"
         label="Title"
         placeholder="The Blog"
         key={form.key("title")}
         {...form.getInputProps("title")}
       />
       <TextInput
+        data-testid="authorInput"
         label="Author"
         placeholder="Mr. Blog Writer"
         key={form.key("author")}
         {...form.getInputProps("author")}
       />
       <TextInput
+        data-testid="urlInput"
         label="Url"
         placeholder="http://www.random-link.com"
         key={form.key("url")}
         {...form.getInputProps("url")}
       />
       <Group mt="md">
-        <Button type="submit">Add Blog</Button>
+        <Button type="submit" data-testid="submitButton">
+          Add Blog
+        </Button>
       </Group>
     </form>
   );
