@@ -44,11 +44,11 @@ describe("Blog", () => {
       screen.getByText("10 likes");
     });
 
-    test("correctly displays remove button as username of blog === username of logged user => button can be clicked to call deleteBlog fn", async () => {
-      const removeButton = screen.getByRole("button", { name: "remove" });
+    test("correctly displays delete button as username of blog === username of logged user => button can be clicked to call deleteBlog fn", async () => {
+      const deleteButton = screen.getByRole("button", { name: "delete" });
 
       const mockedUser = userEvent.setup();
-      await mockedUser.click(removeButton);
+      await mockedUser.click(deleteButton);
 
       expect(deleteBlog.mock.calls).toHaveLength(1);
     });
@@ -89,8 +89,8 @@ describe("Blog", () => {
         />
       );
 
-      const removeButton = screen.queryByText("remove");
-      expect(removeButton).toBeNull();
+      const deleteButton = screen.queryByText("delete");
+      expect(deleteButton).toBeNull();
     });
   });
 });

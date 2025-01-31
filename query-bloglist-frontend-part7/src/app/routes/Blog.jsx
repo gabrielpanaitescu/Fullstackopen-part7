@@ -43,7 +43,7 @@ export const BlogDetails = ({
           color={didUserAlreadyLiked ? "gray" : "teal"}
           onClick={() => updateLikes(blog)}
         >
-          {didUserAlreadyLiked ? "remove like" : "like"}
+          {didUserAlreadyLiked ? "unlike" : "like"}
         </Button>
       </Group>
       {user.username === blog.user.username && (
@@ -73,7 +73,7 @@ const Blog = ({ blog }) => {
 
   const deleteBlog = async ({ id, title, author }) => {
     const confirmation = window.confirm(
-      `Remove blog '${title}' by '${author}'?`
+      `Delete blog '${title}' by '${author}'?`
     );
     if (!confirmation) return;
 
