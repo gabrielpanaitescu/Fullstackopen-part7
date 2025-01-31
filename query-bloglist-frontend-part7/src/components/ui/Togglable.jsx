@@ -21,7 +21,13 @@ const Togglable = forwardRef(({ buttonLabel, children }, ref) => {
     <>
       <div style={showWhenVisible}>
         {children}
-        <Button onClick={toggleVisibility} mt={rem(10)} color="red">
+        <Button
+          onClick={toggleVisibility}
+          mt={rem(10)}
+          color="grey"
+          size="compact-sm"
+          style={{ fontSize: "0.8em" }}
+        >
           Cancel
         </Button>
       </div>

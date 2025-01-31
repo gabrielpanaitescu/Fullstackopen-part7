@@ -7,27 +7,71 @@ import Comment from "./Comment/Comment";
 const BlogComments = ({ blog }) => {
   const [text, setText] = useState("");
   const blogCommentsRef = useRef();
-  const { blogCommentMutation } = useBlogs();
+  const {
+    addBlogCommentMutation,
+    deleteBlogCommentMutation,
+    editBlogCommentMutation,
+  } = useBlogs();
+  const [editMode, setEditMode] = useState(false);
+
   const [isBlurred, setIsBlurred] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handlePostComment = (e) => {
     setIsBlurred(true);
     e.preventDefault();
     blogCommentsRef.current.toggleVisibility();
-    blogCommentMutation.mutate(
+    addBlogCommentMutation.mutate(
       { id: blog.id, text },
       {
         onSettled: () => {
+          setText("");
           setIsBlurred(false);
         },
       }
     );
   };
+
+  const handleDeleteComment = (commentId) => {
+    const confirmation = window.confirm(
+      "Are you sure you want to delete the comment?"
+    );
+
+    if (!confirmation) return;
+
+    setIsBlurred(true);
+
+    const payload = {
+      blogId: blog.id,
+      commentId,
+    };
+    deleteBlogCommentMutation.mutate(payload, {
+      onSettled: () => {
+        setIsBlurred(false);
+      },
+    });
+  };
+
+  const handleEditComment = (commentId, editText) => {
+    setIsBlurred(true);
+
+    const payload = {
+      text: editText,
+      blogId: blog.id,
+      commentId,
+    };
+    editBlogCommentMutation.mutate(payload, {
+      onSettled: () => {
+        setEditMode(false);
+        setIsBlurred(false);
+      },
+    });
+  };
+
   return (
     <Stack>
       <Title order={4}>Comments</Title>
       <Togglable buttonLabel="new" ref={blogCommentsRef}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handlePostComment}>
           <Stack align="start">
             <Textarea
               description="Type your comment and press post!"
@@ -36,20 +80,27 @@ const BlogComments = ({ blog }) => {
               required
               onChange={(e) => setText(e.target.value)}
             />
-            <Button type="submit" color="teal">
+            <Button type="submit" color="teal" size="compact-sm">
               Post
             </Button>
           </Stack>
         </form>
       </Togglable>
       <Flex direction="column" gap="sm">
-        {blog.comments.map((comment, index) => {
-          return isBlurred ? (
+        {blog.comments.map((comment, index) =>
+          isBlurred ? (
             <Skeleton key={index} h={100} w={400} animate={true} />
           ) : (
-            <Comment key={index} comment={comment} />
-          );
-        })}
+            <Comment
+              key={index}
+              comment={comment}
+              handleDeleteComment={() => handleDeleteComment(comment.id)}
+              handleEditComment={handleEditComment}
+              editMode={editMode}
+              setEditMode={setEditMode}
+            />
+          )
+        )}
       </Flex>
     </Stack>
   );

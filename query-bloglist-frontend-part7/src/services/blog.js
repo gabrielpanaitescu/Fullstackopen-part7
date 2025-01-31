@@ -23,11 +23,11 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const update = async (updatedObject) => {
-  const id = updatedObject.id;
+const update = async (blog) => {
+  const id = blog.id;
   const url = `${baseUrl}/${id}`;
 
-  const response = await axios.put(url, updatedObject, getConfig());
+  const response = await axios.put(url, blog, getConfig());
   return response.data;
 };
 
@@ -44,11 +44,29 @@ const addComment = async ({ id, text }) => {
   return response.data;
 };
 
+const deleteComment = async ({ blogId, commentId }) => {
+  const url = `${baseUrl}/${blogId}/${commentId}`;
+
+  const response = await axios.delete(url, getConfig());
+
+  return response.data;
+};
+
+const editComment = async ({ text, blogId, commentId }) => {
+  const url = `${baseUrl}/${blogId}/${commentId}`;
+
+  const response = await axios.put(url, { text }, getConfig());
+
+  return response.data;
+};
+
 export default {
+  setToken,
   getAll,
   create,
   update,
   deleteItem,
   addComment,
-  setToken,
+  deleteComment,
+  editComment,
 };

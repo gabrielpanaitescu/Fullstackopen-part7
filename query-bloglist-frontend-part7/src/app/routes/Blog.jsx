@@ -16,7 +16,14 @@ import {
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
-export const BlogDetails = ({ blog, user, deleteBlog, updateLikes }) => (
+export const BlogDetails = ({
+  blog,
+  user,
+  deleteBlog,
+  updateLikes,
+  isUpdateBlogPending,
+  didUserAlreadyLiked,
+}) => (
   <Card padding="lg" radius="md" maw={rem(500)}>
     <Card.Section withBorder inheritPadding py="xs" mb="xs">
       <Stack>
@@ -28,19 +35,24 @@ export const BlogDetails = ({ blog, user, deleteBlog, updateLikes }) => (
       <Anchor href={blog.url}>Link</Anchor>
       <Group>
         <Text>
-          {blog.likes} {blog.likes <= 1 ? "like" : "likes"}
+          {blog.likes} {blog.likes === 1 ? "like" : "likes"}
         </Text>
         <Button
+          disabled={isUpdateBlogPending}
           size="compact-sm"
-          color="teal"
+          color={didUserAlreadyLiked ? "gray" : "teal"}
           onClick={() => updateLikes(blog)}
         >
-          like
+          {didUserAlreadyLiked ? "remove like" : "like"}
         </Button>
       </Group>
       {user.username === blog.user.username && (
-        <Button size="compact-sm" color="red" onClick={() => deleteBlog(blog)}>
-          remove
+        <Button
+          size="compact-sm"
+          color="orange"
+          onClick={() => deleteBlog(blog)}
+        >
+          delete
         </Button>
       )}
     </Stack>
@@ -50,26 +62,18 @@ export const BlogDetails = ({ blog, user, deleteBlog, updateLikes }) => (
 const Blog = ({ blog }) => {
   const user = useAuthState();
   const navigate = useNavigate();
-  const { blogs, updateBlogMutation, deleteBlogMutation, isGetBlogsPending } =
+  const { updateBlogMutation, deleteBlogMutation, isGetBlogsPending } =
     useBlogs();
 
-  console.log("user", user);
+  const { isPending: isUpdateBlogPending } = updateBlogMutation;
 
   const updateLikes = async (blog) => {
-    const blogId = blog.id;
-    const blogToUpdate = blogs.find((blog) => blog.id === blogId);
-    const updatedBlog = {
-      ...blogToUpdate,
-      user: blogToUpdate.user.id,
-      likes: blogToUpdate.likes + 1,
-    };
-
-    updateBlogMutation.mutate(updatedBlog);
+    updateBlogMutation.mutate(blog);
   };
 
   const deleteBlog = async ({ id, title, author }) => {
     const confirmation = window.confirm(
-      `Remove blog '${title}' by '${author}'`
+      `Remove blog '${title}' by '${author}'?`
     );
     if (!confirmation) return;
 
@@ -97,6 +101,10 @@ const Blog = ({ blog }) => {
   if (!blog)
     return <ErrorElement error={{ status: 404, statusText: "Not found" }} />;
 
+  const didUserAlreadyLiked = Boolean(
+    blog.likedBy?.find((obj) => obj.username === user.username)
+  );
+
   return (
     <Stack direction="column" gap={50}>
       <BlogDetails
@@ -104,6 +112,8 @@ const Blog = ({ blog }) => {
         user={user}
         updateLikes={updateLikes}
         deleteBlog={deleteBlog}
+        isUpdateBlogPending={isUpdateBlogPending}
+        didUserAlreadyLiked={didUserAlreadyLiked}
       />
       <BlogComments blog={blog} />
     </Stack>

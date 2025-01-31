@@ -1,5 +1,19 @@
-import { Text, Group, Paper, Divider, rem, Flex } from "@mantine/core";
+import {
+  Text,
+  Group,
+  Paper,
+  Divider,
+  rem,
+  Flex,
+  ActionIcon,
+  Button,
+  Textarea,
+} from "@mantine/core";
 import classes from "./Comment.module.css";
+import { useAuthState } from "../../../contexts/AuthContext";
+import IconEdit from "@tabler/icons-react/dist/esm/icons/IconEdit";
+import IconMessage2X from "@tabler/icons-react/dist/esm/icons/IconMessage2X";
+import { useEffect, useState } from "react";
 
 const formatDate = (dateString) => {
   return new Intl.DateTimeFormat("en-US", {
@@ -11,7 +25,27 @@ const formatDate = (dateString) => {
   }).format(new Date(dateString));
 };
 
-export default function Comment({ comment }) {
+export default function Comment({
+  comment,
+  handleDeleteComment,
+  editMode,
+  setEditMode,
+  handleEditComment,
+}) {
+  const [editText, setEditText] = useState(comment.text);
+  const user = useAuthState();
+
+  const isUserCommentOwner = user.username === comment.user.username;
+
+  useEffect(() => {
+    setEditText(comment.text);
+  }, [comment]);
+
+  const onEditComment = (e) => {
+    e.preventDefault();
+    handleEditComment(comment.id, editText);
+  };
+
   return (
     <Paper withBorder radius="md" className={classes.comment} maw={rem(400)}>
       <Group>
@@ -24,10 +58,54 @@ export default function Comment({ comment }) {
       </Group>
       <Divider my={rem(10)} />
       <Flex>
-        <Text size="sm" className={classes.text}>
-          {comment.text}
-        </Text>
+        {editMode && isUserCommentOwner ? (
+          <form onSubmit={onEditComment}>
+            <Textarea
+              required
+              value={editText}
+              onChange={(e) => setEditText(e.currentTarget.value)}
+            />
+            {/* <Button
+              type="button"
+              color="grey"
+              size="compact-xs"
+              onClick={() => setEditMode(false)}
+            >
+              Cancel
+            </Button> */}
+            <Button type="submit" color="teal" size="compact-xs" mt={5} ml={2}>
+              Confirm
+            </Button>
+          </form>
+        ) : (
+          <Text size="sm" className={classes.text}>
+            {comment.text}
+          </Text>
+        )}
       </Flex>
+      {isUserCommentOwner && (
+        <Flex justify="space-between" mt={15}>
+          <ActionIcon
+            id="editButton"
+            size="xs"
+            variant="subtle"
+            onClick={() => {
+              if (editMode) setEditText(comment.text);
+              setEditMode(!editMode);
+            }}
+          >
+            <IconEdit stroke={2} />
+          </ActionIcon>
+          <ActionIcon
+            size="xs"
+            variant="subtle"
+            color="red"
+            onClick={handleDeleteComment}
+          >
+            <IconMessage2X stroke={2} />
+          </ActionIcon>
+        </Flex>
+      )}
     </Paper>
   );
 }
